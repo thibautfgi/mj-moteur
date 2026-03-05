@@ -1,1 +1,4 @@
-CREATE DATABASE IF NOT EXISTS mountain_journey;
+CREATE DATABASE IF NOT EXISTS mountain_journey CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
+GRANT ALL PRIVILEGES ON mountain_journey.* TO 'mj_user'@'%';
+FLUSH PRIVILEGES;
