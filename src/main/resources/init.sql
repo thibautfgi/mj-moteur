@@ -1,4 +1,10 @@
-CREATE DATABASE IF NOT EXISTS mountain_journey CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-
-GRANT ALL PRIVILEGES ON mountain_journey.* TO 'mj_user'@'%';
-FLUSH PRIVILEGES;
+CREATE TABLE IF NOT EXISTS users (
+                                     User_Id        SERIAL       NOT NULL,
+                                     User_FirstName VARCHAR(255) DEFAULT NULL,
+    User_LastName  VARCHAR(255) DEFAULT NULL,
+    User_Phone     VARCHAR(255) DEFAULT NULL,
+    User_Email     VARCHAR(255) NOT NULL,
+    User_Password  VARCHAR(255) NOT NULL,
+    PRIMARY KEY (User_Id),
+    UNIQUE (User_Email)
+    );
