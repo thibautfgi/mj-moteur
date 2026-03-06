@@ -9,8 +9,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+COPY start-mo.sh /app/start-mo.sh
+RUN chmod +x /app/start-mo.sh
 
 EXPOSE 8080
-ENTRYPOINT ["/app/start.sh"]
+ENTRYPOINT ["/app/start-mo.sh"]
