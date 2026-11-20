@@ -1,14 +1,9 @@
-CREATE TABLE IF NOT EXISTS users (
-                                     User_Id        SERIAL       NOT NULL,
-                                     User_FirstName VARCHAR(255) DEFAULT NULL,
-    User_LastName  VARCHAR(255) DEFAULT NULL,
-    User_Phone     VARCHAR(255) DEFAULT NULL,
-    User_Email     VARCHAR(255) NOT NULL,
-    User_Password  VARCHAR(255) NOT NULL,
-    PRIMARY KEY (User_Id),
-    UNIQUE (User_Email)
-    );
+-- ================================================================
+-- Init Script for mj_data_db
+-- Engine Service Database - Maps, Sentiers & Geodata
+-- ================================================================
 
+-- Create image table (no changes)
 CREATE TABLE IF NOT EXISTS image (
     Image_Id        SERIAL       NOT NULL,
     Image_Name      VARCHAR(255) NOT NULL,
@@ -16,24 +11,23 @@ CREATE TABLE IF NOT EXISTS image (
     PRIMARY KEY (Image_Id)
 );
 
+-- Create map table (User_Id as simple column, no FK to auth DB)
 CREATE TABLE IF NOT EXISTS map (
     Map_Id             SERIAL       NOT NULL,
     User_Id            INTEGER      NOT NULL,
-    Image_Id           INTEGER      NOT NULL,
+    Image_Id           INTEGER,
     Map_Name           VARCHAR(255) NOT NULL,
     Map_Description    TEXT,
     Map_Rating         INTEGER,
     Map_TotalDistance  INTEGER,
-    Map_DateCreation   TIMESTAMP    NOT NULL,
+    Map_DateCreation   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (Map_Id),
-    CONSTRAINT fk_map_user FOREIGN KEY (User_Id)
-        REFERENCES users (User_Id)
-        ON DELETE CASCADE,
     CONSTRAINT fk_map_image FOREIGN KEY (Image_Id)
         REFERENCES image (Image_Id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
+-- Create gpx table
 CREATE TABLE IF NOT EXISTS gpx (
     Gpx_Id       SERIAL       NOT NULL,
     Map_Id       INTEGER      NOT NULL,
@@ -45,6 +39,7 @@ CREATE TABLE IF NOT EXISTS gpx (
         ON DELETE CASCADE
 );
 
+-- Create mark table
 CREATE TABLE IF NOT EXISTS mark (
     Mark_Id   SERIAL       NOT NULL,
     Map_Id    INTEGER      NOT NULL,
@@ -57,3 +52,17 @@ CREATE TABLE IF NOT EXISTS mark (
         REFERENCES map (Map_Id)
         ON DELETE CASCADE
 );
+
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS idx_map_user_id ON map(User_Id);
+CREATE INDEX IF NOT EXISTS idx_map_image_id ON map(Image_Id);
+CREATE INDEX IF NOT EXISTS idx_gpx_map_id ON gpx(Map_Id);
+CREATE INDEX IF NOT EXISTS idx_mark_map_id ON mark(Map_Id);
+
+-- ================================================================
+-- Notes
+-- ================================================================
+-- User_Id in map table is a simple INTEGER reference to mj_auth_db.users.User_Id
+-- This allows the data to be independent from the auth database
+-- If a user is deleted in mj_auth_db, their maps remain in mj_data_db
+-- (This is intentional - preserves data integrity)

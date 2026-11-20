@@ -1,12 +1,9 @@
 package com.mountain_journey.mj_moteur.entity;
 
-import com.mountain_journey.mj_moteur.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -22,11 +19,9 @@ public class Map {
     @Column(name = "Map_Id")
     private Integer mapId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "User_Id", nullable = false)
+    @Column(name = "User_Id", nullable = false)
     @NotNull
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private Integer userId;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "Image_Id")

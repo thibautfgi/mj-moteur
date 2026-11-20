@@ -24,8 +24,8 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String email = authentication.getPrincipal().toString();
-        MapResponse response = mapService.createMap(email, request);
+        Integer userId = (Integer) authentication.getPrincipal();
+        MapResponse response = mapService.createMap(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class MapResponse {
     private final Integer mapId;
+    private final Integer userId;
     private final String mapName;
     private final String mapDescription;
     private final Integer mapRating;

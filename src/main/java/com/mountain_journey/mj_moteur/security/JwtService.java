@@ -25,6 +25,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public Integer extractUserId(String token) {
+        Object userId = Jwts.parser().verifyWith(getKey()).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId");
+        return userId == null ? null : ((Number) userId).intValue();
+    }
+
     public String extractEmail(String token) {
         return Jwts.parser().verifyWith(getKey()).build()
                 .parseSignedClaims(token)
